@@ -2,26 +2,36 @@ from ortools.sat.python import cp_model
 from itertools import groupby, product, combinations
 import pickle
 import math
+from mio import color
 import csv
-
-# load in player list
-with open("players.csv", 'r', newline='') as file:
-    data = csv.DictReader(file, delimiter=';')
-    player_dicts = [row for row in data]
-player_names = [p["name"] for p in player_dicts]
-player_clubs = [p["club"] for p in player_dicts]
+from sys import argv
 
 
-n_players = 100        # player count
-n_days = 8             # hanchan count
-players_per_group = 4  # four player game
-crossover_ratio = 0.3  # threshold of intra-club play
+def load_players(player_file=None):
+    if player_file==None and len(argv) <= 1:
+        player_file = argv[1]
+
+    with open(player_file, 'r', newline='') as file:
+        data = csv.DictReader(file, delimiter=';')
+        players = [row for row in data]
+    return players
 
 # This is a convenience function to help iterate over groups
 def groupby_keys(input_list, keylist):
     keyfunc = lambda x: tuple(x[k] for k in keylist)
     yield from groupby(sorted(input_list, key=keyfunc), key=keyfunc)
 
+
+player_dicts = load_players("players.csv")
+player_names = [p["name"] for p in player_dicts]
+player_clubs = [p["club"] for p in player_dicts]
+
+n_players = len(player_names)
+n_days = 8
+players_per_group = 4
+crossover_ratio = float(argv[1])
+
+club_matrix = [[player_clubs[i] == player_clubs[j] and player_clubs[i] != '' for i in range(n_players)] for j in range(n_players)]
 
 # these will come in handy
 n_groups = n_players // players_per_group
@@ -30,8 +40,6 @@ players = list(range(n_players))
 days = list(range(n_days))
 groups = list(range(n_groups))
 seats = list(range(players_per_group))
-club_matrix = [[player_clubs[i] == player_clubs[j] for i in range(n_players)] for j in range(n_players)]
-
 
 model = cp_model.CpModel()
 
@@ -78,16 +86,18 @@ for p1, p2 in combinations(players, r=2):
             if club_matrix[p1][p2]:
                 penalties.append(together)
 
+            # This section shows how to implement the implication version of the
+            # multiplicative constraint
+            # model.AddBoolOr([p1g.Not(), p2g.Not(), together])
+            # model.AddImplication(together, p1g)
+            # model.AddImplication(together, p2g)
     model.Add(sum(players_together) <= 1)
 
-
-
 # [1] Minimizing intra-club play (VERY SLOW)
-model.Minimize(sum(penalties))
+# model.Minimize(sum(penalties))
 
 # [2] Threshold intra-club play (FASTER)
-# model.Add(sum(penalties) <= int(crossover_ratio * n_players * n_days))
-
+model.Add(sum(penalties) <= int(crossover_ratio * n_players * n_days))
 
 solver = cp_model.CpSolver()
 solver.Solve(model)
@@ -121,8 +131,30 @@ def parse_answer(variables):
 ans = parse_answer(variables)
 
 # save answers
-pickle_name = f"answer_{n_players}_{n_days}_intra_club.pkl"
+pickle_name = f"answer_{n_players}_{n_days}_{crossover_ratio}.pkl"
+
 with open(pickle_name, 'wb') as file:
     pickle.dump(ans, file)
 
-print(f"Solution dumped --> {pickle_name}")
+
+# print answers
+compass = ["East", "South", "West", "North"]
+colors = ["GREEN", "RED", "PURPLE", "BLUE"]
+for day, groups in ans.items():
+    color()
+    color("BOLD")
+    color("UNDERLINE")
+    print(f"Round {day+1}:")
+    for i,group in groups.items():
+        color()
+        print(f"Group {i+1}: ", end="")
+
+        for seatIndex,playerIndex in group.items():
+            color(colors[seatIndex])
+            pIndex = playerIndex[0]
+            print(f"{compass[seatIndex]} : {player_names[pIndex]}", end=" ")
+            color("ITALIC")
+            print(f"({player_clubs[pIndex]})", end=" ")
+        print()
+    print()
+color()

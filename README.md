@@ -16,6 +16,6 @@ If you have not already, install the following
 * Setup LFS `git lfs install`
 
 ### Setup
-1. Clone this repo `git clone https://gitlab.com/florasoft/social-jongers.git`
+1. Clone this repo `git clone https://gitlab.com/surajsingireddy/social-jongers.git`
 3. First time setup `source setup.sh`
 5. Run program `source run.sh`

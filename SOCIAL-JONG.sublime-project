@@ -1,0 +1,54 @@
+{
+    "folders":
+    [
+        {
+        "file_exclude_patterns":
+            [   
+                "Pipfile",
+                "Pipefile.lock",
+                // BINARY MEDIA
+                "*.pkl",
+                "*.pickle",
+                "*.png",
+                "*.webm",
+                "*.jpeg",
+                "*.jpg",
+                "*.wav",
+                "*.ogg",
+                "*.ogv",
+                // LOGS
+                "*.log",
+                "*.ini",
+                // CACHE
+                "*.dropbox",
+                "*.rpyc",
+                "*.pyc",
+                "*.pyo",
+                "*.bak",
+                // ETC
+                "*.ttf",
+                "*.sublime-project",
+                "*.sublime-workspace",
+                "*.py.template",
+                // "*.sh"
+            ],
+
+            "folder_exclude_patterns":
+            [
+                "__pycache__",
+                "virt",
+                "build",
+                "dist",
+            ],
+            "binary_file_patterns":
+            [
+                "*/__pycache__/*",
+                "*/virt/*",
+                "*/build/*",
+                "*/dist/*",
+            ],
+
+            "path": "."
+        }
+    ]
+}

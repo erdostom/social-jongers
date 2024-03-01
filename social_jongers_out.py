@@ -1,12 +1,7 @@
 import pickle
 from color import color
+from random import shuffle
 import csv 
-
-# load in social golfers solution
-pickle_name = f"answer_100_8.pkl"
-with open(pickle_name, 'rb') as file:
-    ans = pickle.load(file)
-
 
 
 def printSolution(ans):
@@ -14,6 +9,9 @@ def printSolution(ans):
     with open("players.csv", 'r', newline='') as file:
         data = csv.DictReader(file, delimiter=';')
         player_dicts = [row for row in data]
+
+    # shuffle player list to add variation (despite using same SAT solution)
+    shuffle(player_dicts)
     player_names = [p["name"] for p in player_dicts]
     player_clubs = [p["club"] for p in player_dicts]
 
@@ -38,3 +36,11 @@ def printSolution(ans):
             print()
         print()
     color()
+
+
+if __name__=="__main__":
+    # load in social golfers solution
+    pickle_name = f"output/answer_100_8.pkl"
+    with open(pickle_name, 'rb') as file:
+        ans = pickle.load(file)
+    printSolution(ans)

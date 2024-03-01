@@ -93,11 +93,11 @@ for p1, p2 in combinations(players, r=2):
             # model.AddImplication(together, p2g)
     model.Add(sum(players_together) <= 1)
 
-# [1] Minimizing intra-club play (VERY SLOW)
+# [1] Minimizing intra-club play (minimize - VERY SLOW)
 # model.Minimize(sum(penalties))
 
-# [2] Threshold intra-club play (FASTER)
-model.Add(sum(penalties) <= int(crossover_ratio * n_players * n_days))
+# [2] Minimize intra-club play (threshold - FASTER)
+# model.Add(sum(penalties) <= int(crossover_ratio * n_players * n_days))
 
 solver = cp_model.CpSolver()
 solver.Solve(model)

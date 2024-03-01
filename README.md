@@ -17,5 +17,5 @@ If you have not already, install the following
 
 ### Setup
 1. Clone this repo `git clone https://gitlab.com/surajsingireddy/social-jongers.git`
-3. First time setup `source setup.sh`
-5. Run program `source run.sh`
+2. First time setup `source setup.sh`
+3. Run program `source run.sh`

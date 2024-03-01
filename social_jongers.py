@@ -2,7 +2,7 @@ from ortools.sat.python import cp_model
 from itertools import groupby, product, combinations
 import pickle
 import math
-from mio import color
+from color import color
 import csv
 from sys import argv
 
@@ -102,6 +102,7 @@ model.Add(sum(penalties) <= int(crossover_ratio * n_players * n_days))
 solver = cp_model.CpSolver()
 solver.Solve(model)
 print(solver.ResponseStats())
+
 
 
 def parse_answer(variables):

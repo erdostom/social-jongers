@@ -1,2 +1,2 @@
 source virt/bin/activate
-python main.py
+python social_jongers_out.py

@@ -60,9 +60,6 @@ def printSolution(inputFile):
     color()
 
 
-
-
-
 # generate CSV ouput
 def csvSolution(inputFile, outputFile):
     # load in player list
@@ -75,7 +72,6 @@ def csvSolution(inputFile, outputFile):
     player_names = [p["name"] for p in player_dicts]
     player_clubs = [p["club"] for p in player_dicts]
 
-
     with open(outputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
 
@@ -87,7 +83,6 @@ def csvSolution(inputFile, outputFile):
             roundNumbers.append(i)
         writer.writerow(["Player ID", "Name"] + roundNumbers)
         writer.writerow(["", ""]              + ["Table", "Seat"] * roundCount)
-
 
         # Generate assignments (playerID[day] : {table,seat})
         assignments = [[None for _ in range(roundCount)] for _ in range(len(player_names))]

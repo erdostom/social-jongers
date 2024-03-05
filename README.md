@@ -1,6 +1,8 @@
 # Overview
 A script for seeding mahjong tournament seating. It uses a SAT solver to pair non-repeating opponents, equally distribute wind seating, and minimize intra-club play.
 
+![Player Graph](http://url/to/img.png)
+https://gitlab.com/surajsingireddy/social-jongers/-/raw/main/graph.png?ref_type=heads
 ### Further Reading
 * [Social Golfer Problem](https://mathworld.wolfram.com/SocialGolferProblem.html)
 * [Good Enough Golfers](https://goodenoughgolfers.com/)

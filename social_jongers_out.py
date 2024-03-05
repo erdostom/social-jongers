@@ -104,6 +104,6 @@ def csvSolution(inputFile, outputFile):
 
 
 if __name__=="__main__":
-    # genericSolution()
+    genericSolution()
     # printSolution("input/players.csv")
-    csvSolution("input/players.csv", "input/Philly2024.csv")
+    # csvSolution("input/players.csv", "input/Philly2024.csv")

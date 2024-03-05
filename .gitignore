@@ -1,7 +1,7 @@
 # personal ignores
 *.sublime-workspace
 SECRET.py
-
+input/
 
 # large build files
 static/builds/*

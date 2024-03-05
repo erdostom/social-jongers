@@ -2,6 +2,8 @@
 *.sublime-workspace
 SECRET.py
 input/
+lib/
+graph.html
 
 # large build files
 static/builds/*

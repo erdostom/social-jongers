@@ -3,7 +3,7 @@ from itertools import combinations
 import pickle
 
 # load in social golfers solution
-pickle_name = f"output/answer_100_8.pkl"
+pickle_name = f"output/answer_112_6_1.pkl"
 with open(pickle_name, 'rb') as file:
     SOLUTION = pickle.load(file)
 

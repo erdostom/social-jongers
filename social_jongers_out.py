@@ -7,7 +7,7 @@ COLORS = ["GREEN", "RED", "PURPLE", "BLUE"]
 
 
 # load in social golfers solution
-pickle_name = f"output/answer_100_8.pkl"
+pickle_name = f"output/answer_108_6_1.0.pkl"
 with open(pickle_name, 'rb') as file:
     SOLUTION = pickle.load(file)
 
@@ -19,10 +19,10 @@ def genericSolution():
     for day, groups in SOLUTION.items():
         print(f"Round {day+1}:")
         for i,group in groups.items():
-            print(f"Group {i+1}: ", end="")
+            print(f"Group {i+1}: ", end="|")
             for seatIndex,playerIndex in group.items():
                 pIndex = playerIndex[0]
-                print(f"[{COMPASS[seatIndex]}] Player {player_names[pIndex]+1}", end=" ")
+                print(f"{player_names[pIndex]+1}", end="|")
             print()
         print()
 

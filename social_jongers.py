@@ -26,7 +26,7 @@ player_dicts = load_players("players.csv")
 player_names = [p["name"] for p in player_dicts]
 player_clubs = [p["club"] for p in player_dicts]
 
-n_players = 108
+n_players = len(player_names)
 n_days = 6
 players_per_group = 4
 crossover_ratio = float(argv[1] if len(argv) > 1 else 1.0)
@@ -36,6 +36,7 @@ club_matrix = [[player_clubs[i] == player_clubs[j] and player_clubs[i] != '' for
 # these will come in handy
 n_groups = n_players // players_per_group
 n_games_per_seat = math.ceil(n_days / players_per_group)
+min_games_per_seat = 1
 players = list(range(n_players))
 days = list(range(n_days))
 groups = list(range(n_groups))
@@ -68,6 +69,10 @@ for idx, grp in groupby_keys(variables, ['Day', 'Group', 'Seat']):
     model.Add(sum(x['CP_Var'] for x in grp) == 1)
 
 # players don't play in the same seat more often than necessary
+for idx, grp in groupby_keys(variables, ['Player', 'Seat']):
+    model.Add(sum(x['CP_Var'] for x in grp) >= min_games_per_seat)
+
+# players play in each seat at least once
 for idx, grp in groupby_keys(variables, ['Player', 'Seat']):
     model.Add(sum(x['CP_Var'] for x in grp) <= n_games_per_seat)
 

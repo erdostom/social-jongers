@@ -14,7 +14,7 @@ with open(pickle_name, 'rb') as file:
 
 # print solution ("Player 1, Player 2...etc")
 def genericSolution():
-    player_names = list(range(0,100))
+    player_names = list(range(0,112))
     shuffle(player_names)
     for day, groups in SOLUTION.items():
         print(f"Round {day+1}:")
@@ -76,7 +76,7 @@ def csvSolution(inputFile, outputFile):
         writer = csv.writer(csvfile)
 
         # CSV header
-        roundCount = 8
+        roundCount = 6
         roundNumbers = []
         for i in range(1,roundCount+1):
             roundNumbers.append("")

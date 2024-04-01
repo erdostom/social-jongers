@@ -12,7 +12,7 @@ def load_players(player_file=None):
         player_file = argv[1]
 
     with open(player_file, 'r', newline='') as file:
-        data = csv.DictReader(file, delimiter=';')
+        data = csv.DictReader(file, delimiter=',')
         players = [row for row in data]
     return players
 
@@ -26,8 +26,8 @@ player_dicts = load_players("players.csv")
 player_names = [p["name"] for p in player_dicts]
 player_clubs = [p["club"] for p in player_dicts]
 
-n_players = len(player_names)
-n_days = 8
+n_players = 108
+n_days = 6
 players_per_group = 4
 crossover_ratio = float(argv[1] if len(argv) > 1 else 1.0)
 

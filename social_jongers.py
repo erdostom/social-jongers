@@ -32,8 +32,8 @@ n_players = len(player_names)
 n_days = 6
 players_per_group = 4
 
-max_target_windval = 0 if n_days % 2 == 0 else 1
-min_target_windval = 0 if n_days % 2 == 0 else -1
+max_target_windval = 0 if n_days % 2 == 0 else ary[-1]
+min_target_windval = 0 if n_days % 2 == 0 else ary[0]
 
 crossover_ratio = float(argv[1] if len(argv) > 1 else 1.0)
 

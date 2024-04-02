@@ -22,6 +22,8 @@ def groupby_keys(input_list, keylist):
     yield from groupby(sorted(input_list, key=keyfunc), key=keyfunc)
 
 
+wind_vals = [-2, -1, 1, 2]
+
 player_dicts = load_players("players.csv")
 player_names = [p["name"] for p in player_dicts]
 player_clubs = [p["club"] for p in player_dicts]
@@ -29,6 +31,10 @@ player_clubs = [p["club"] for p in player_dicts]
 n_players = len(player_names)
 n_days = 6
 players_per_group = 4
+
+max_target_windval = 0 if n_days % 2 == 0 else 1
+min_target_windval = 0 if n_days % 2 == 0 else -1
+
 crossover_ratio = float(argv[1] if len(argv) > 1 else 1.0)
 
 club_matrix = [[player_clubs[i] == player_clubs[j] and player_clubs[i] != '' for i in range(n_players)] for j in range(n_players)]
@@ -36,7 +42,7 @@ club_matrix = [[player_clubs[i] == player_clubs[j] and player_clubs[i] != '' for
 # these will come in handy
 n_groups = n_players // players_per_group
 n_games_per_seat = math.ceil(n_days / players_per_group)
-min_games_per_seat = 1
+min_games_per_seat = n_days // players_per_group
 players = list(range(n_players))
 days = list(range(n_days))
 groups = list(range(n_groups))
@@ -68,13 +74,27 @@ for idx, grp in groupby_keys(variables, ['Day', 'Group']):
 for idx, grp in groupby_keys(variables, ['Day', 'Group', 'Seat']):
     model.Add(sum(x['CP_Var'] for x in grp) == 1)
 
-# players don't play in the same seat more often than necessary
+# players play in each seat at least once
 for idx, grp in groupby_keys(variables, ['Player', 'Seat']):
     model.Add(sum(x['CP_Var'] for x in grp) >= min_games_per_seat)
 
-# players play in each seat at least once
+# players don't play in the same seat more often than necessary
 for idx, grp in groupby_keys(variables, ['Player', 'Seat']):
     model.Add(sum(x['CP_Var'] for x in grp) <= n_games_per_seat)
+
+
+player_sums = {}
+
+for player in players:
+    player_sums[player] = 0
+    for day in days:
+        for group in groups:
+            score = sum(player_vars[player, day, group, seat] * wind_vals[idx] for idx, seat in enumerate(seats))
+            player_sums[player] += score
+
+    model.Add(player_sums[player] <= max_target_windval)
+    model.Add(player_sums[player] >= min_target_windval)
+
 
 penalties = []
 for p1, p2 in combinations(players, r=2):
@@ -87,6 +107,7 @@ for p1, p2 in combinations(players, r=2):
             p2g = sum(player_vars[p2, day, group, seat] for seat in seats)
             model.Add(p1g + p2g - together <= 1)
 
+
             # objective: minimize games between players from same club
             if club_matrix[p1][p2]:
                 penalties.append(together)
@@ -97,6 +118,8 @@ for p1, p2 in combinations(players, r=2):
             # model.AddImplication(together, p1g)
             # model.AddImplication(together, p2g)
     model.Add(sum(players_together) <= 1)
+
+
 
 # [1] Minimizing intra-club play (minimize - VERY SLOW)
 # model.Minimize(sum(penalties))
